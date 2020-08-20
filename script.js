@@ -2,9 +2,61 @@ var currentIndex = 0;
 var allData = [];
 var imgs = [];
 var divs = [];
-var contents = [];
 var isLoading = true;
 var isInstagram = true;
+var scrollPos = 0;
+
+var categories2 = [
+  "FORM",
+  "POWER",
+  "RELATIONSHIPS",
+  "MOVEMENT",
+  "REPLAY",
+  "WARP",
+  "TOTAL"
+];
+var occurrences2 = [
+  0,
+  27,
+  38,
+  56,
+  83,
+  97
+];
+var categories3 = [
+  "2D",
+  "3D",
+  "POLYDIMENSIONAL",
+  "SURVEILLANCE CAPITALISM",
+  "COLONIALISM",
+  "HOME",
+  "COMMUNITY",
+  "ACTIONS",
+  "PORTALS",
+  "DERIVE",
+  "BROADCAST",
+  "STREAM",
+  "HISTORY",
+  "TIMELINES",
+  "WARP"
+];
+var occurrences3 = [
+  0,
+  9,
+  23,
+  27,
+  34,
+  38,
+  50,
+  56,
+  73,
+  80,
+  83,
+  85,
+  89,
+  93,
+  97
+];
 
 function setup() {
   google.charts.load('current');
@@ -18,43 +70,9 @@ function initDivs() {
   let num = 20;
   let inc = 10;
   for (let i = 0; i < num; i++) {
-    divs[i] = createDiv();
-    divs[i].id("c" + i);
-    divs[i].class("card");
-    // divs[i].addClass("draggable");
-    // divs[i].style("display", "none");
-    let w = 400; //floor(map(i, 0, num, 20, 400));
-    divs[i].style("width", w + "px");
-    divs[i].style("height", w + "px");
-    divs[i].style("top", i*inc + "px");
-    divs[i].style("left", windowWidth/2+i*inc + "px");
-    divs[i].style("opacity", map(i, 0, num, 0, 1));
-    // divs[i].style("display", "none");
-
-    let toolbar = createDiv();
-    toolbar.class("toolbar");
-    toolbar.parent(divs[i]);
-    toolbar.style("top", "0px");
-
-    let button1 = createDiv();
-    button1.class("button1");
-    button1.addClass("button");
-    button1.parent(toolbar);
-
-    let button2 = createDiv();
-    button2.class("button2");
-    button2.addClass("button");
-    button2.parent(toolbar);
-
-    let button3 = createDiv();
-    button3.class("button3");
-    button3.addClass("button");
-    button3.parent(toolbar);
-
-    contents[i] = createDiv();
-    contents[i].class("content");
-    contents[i].parent(divs[i]);
-
+    let x = windowWidth/2+i*inc;
+    let y = i*inc;
+    divs[i] = new Window(x, y, 400, 400, i);
   }
 }
 function draw() {
@@ -62,9 +80,21 @@ function draw() {
   // for (let i = 0; i < imgs.length; i++) {
   //   displayImage(i, 100+i*10, 50+i*10, 400, 400);
   // }
+  updateDivs();
   drawTable();
 }
 
+function mouseReleased() {
+  for (const div of divs) {
+    div.endDrag();
+  }
+}
+
+function updateDivs() {
+  for (const div of divs) {
+    div.update();
+  }
+}
 function drawTable() {
   push();
   fill(255);
@@ -89,48 +119,36 @@ function drawTable() {
   stroke(50);
   line(0, 0, 0, windowHeight-2*buffer);
 
+  // CAT 1
   translate(30, 20);
   line(0, 0, 0, windowHeight-2*buffer);
-  for (let i = 1; i <= 100; i++) {
-    if (currentIndex >= i) fill(255);
-    else fill(selectedC);
-    if (i === 1) text("SPACE", 0, 0);
-    else if (i === 80) text("TIME", 0, i*fSize);
-    // else text("...", 0, i*fSize);
-  }
+  let y = 0;
+  fill(255);
+  text("SPACE", 0, 0);
+  if (currentIndex > 80) fill(255);
+  else fill(selectedC);
+  text("TIME", 0, 83*fSize);
 
-  // col 3
+  // CAT 2
   textSize(14);
   translate(30, 20);
   line(0, 0, 0, windowHeight-2*buffer);
-  for (let i = 1; i <= 100; i++) {
-    if (currentIndex >= i) fill(255);
+  for (let i = 0; i < categories2.length; i++) {
+    let occur = occurrences2[i];
+    if (currentIndex >= occur) fill(255);
     else fill(selectedC);
-    if (i === 1) text("REPRESENTATIONS", 0, 0);
-    else if (i === 20) text("MOVEMENTS", 0, i*fSize);
-    else if (i === 50) text("CONCEPTIONS", 0, i*fSize);
-    // else text("..", 0, i*fSize);
+    text(categories2[i], 0, occur*fSize);
   }
 
-  // textSize(fSize*.5+fSize/2);
-  // for (let i = 1; i <= 100; i++) {
-  //
-  //
-  //   if (currentIndex === i) fill(selectedC);
-  //   text(i, 200, i*fSize);
-  // }
+  // CAT 3
   textSize(12);
   translate(30, 20);
   line(0, 0, 0, windowHeight-2*buffer);
-  for (let i = 1; i <= 100; i++) {
-    fill(255);
-    // textSize(fSize*.5+fSize/2);
-    if (currentIndex >= i) fill(255);
+  for (let i = 0; i < categories3.length; i++) {
+    let occur = occurrences3[i];
+    if (currentIndex >= occur) fill(255);
     else fill(selectedC);
-    if (i === 1) text("PORTALS", 0, 0);
-    else if (i === 20) text("ACTIONS", 0, i*fSize);
-    else if (i === 30) text("DERIVE", 0, i*fSize);
-    // text('.', 0, i*fSize);
+    text(categories3[i], 0, occur*fSize);
   }
   pop();
 }
@@ -149,21 +167,33 @@ function drawTable() {
 // }
 
 function mouseWheel(event) {
-  print(event.delta);
+  let divisor = 30;
+  // print(event.delta);
   //move the square according to the vertical scroll amount
-  currentIndex += constrain(event.delta, -1, 1);
-  if (currentIndex > 10) currentIndex = 10;
-  else if (currentIndex < 0) currentIndex = 10;
-  loadImageNum(currentIndex);
+  scrollPos += event.delta;
+  scrollPos = constrain(scrollPos, 0, divisor*100);
+  currentIndex = floor(scrollPos/divisor);
+  currentIndex = constrain(currentIndex, 0, 100);
+  loadContents();
   //uncomment to block page scrolling
   //return false;
 }
 
-function loadImageNum(currentIndex) {
-  for (let i = 0; i < contents.length; i++) {
-    let ind = currentIndex - i;
-    if (ind < 0) ind += contents.length;
-    contents[i].style("background-image", `url(images/${ind}.jpg)`);
+function mod(a, b) {
+  return (((a % b) + b) % b);
+}
+
+function loadContents() {
+  for (let i = 0; i < divs.length; i++) {
+    let ind = mod(currentIndex - i, divs.length);
+    let url = allData[ind].img_url;
+    // console.log("url", url, ind);
+    if (url) {
+      divs[i].setImageContent(ind);
+    }
+    else {
+      divs[i].setImageContent(0);
+    }
   }
 }
 
@@ -179,7 +209,7 @@ function processSheetsData(response) {
     let d = data.getFormattedValue(0, cc);
     if (d) labels[cc] = d;
   }
-  console.log(labels);
+  console.log("labels", labels);
 
   for (var r = 1; r < rows; r++) {
     var row = {};
@@ -194,6 +224,7 @@ function processSheetsData(response) {
   }
   // loadImageNum(0);
   select(".loading").style("display", "none");
+  console.log("cell2", allData[2]);
   // renderData(array);
 }
 

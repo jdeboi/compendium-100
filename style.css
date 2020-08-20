@@ -15,7 +15,7 @@ canvas {
 .card {
   position: absolute;
   width: 400px;
-  height: 400px;
+  /* height: 400px; */
   overflow: hidden;
   background: transparent;
   color: black;
@@ -35,7 +35,8 @@ canvas {
   /* position: absolute; */
 }
 
-.button {
+
+.buttons div {
   position: absolute;
   width: 10px;
   height: 10px;
@@ -44,9 +45,8 @@ canvas {
   top: 6px;
 }
 
-.button:hover{
+.buttons div:hover{
   background-color: white;
-  background-
 }
 .button1 {
   left: 10px;
