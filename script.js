@@ -7,7 +7,7 @@ var isInstagram = true;
 var scrolling = false;
 var scrollPos = 0;
 var divSize = 400;
-
+var font;
 
 var categories2 = [
   "FORM",
@@ -64,6 +64,7 @@ function setup() {
   google.charts.load('current');
   google.charts.setOnLoadCallback(init);
 
+  font = loadFont("fonts/Moon Light.otf");
   createCanvas(windowWidth, windowHeight);
   initDivs();
 }
@@ -78,10 +79,7 @@ function initDivs() {
   }
 }
 function draw() {
-  // background(0);
-  // for (let i = 0; i < imgs.length; i++) {
-  //   displayImage(i, 100+i*10, 50+i*10, 400, 400);
-  // }
+  background(0);
   updateDivs();
   drawTable();
 }
@@ -149,25 +147,15 @@ function drawTable() {
   let yDis = 0;
   translate(topBuffer, 12+topBuffer);
 
-  // col 1
-  // textSize(12);
-  // for (let i = 1; i <= 100; i++) {
-  //   if (i === 1) text("DIGITAL SPACETIME", 0, i);
-  //   else text("....", 0, i*fSize);
-  // }
-
-  // col 2
-  // translate(140, 0);
+  // CAT 0
+  textFont(font);
   textSize(24);
   text("DIGITAL SPACETIME", 0, -8);
 
-  textSize(16);
-  stroke(50);
-  // line(-5, -24, -5, lineL);
-
   // CAT 1
   translate(0, 50);
-  // line(-5, -14, -5, lineL-20);
+  textSize(16);
+  stroke(50);
   let y = 0;
   fill(255);
   if (currentIndex > 1) fill(255);
@@ -184,19 +172,30 @@ function drawTable() {
   // line(-5, -10, -5, lineL-40);
   for (let i = 0; i < categories2.length; i++) {
     let occur = occurrences2[i];
-    if (currentIndex >= occur+19 && currentIndex > 1) fill(255);
-    else fill(selectedC);
+    if (i == 0) {
+      if (currentIndex > 1) fill(255);
+      else fill(selectedC);
+    }
+    else {
+      if (currentIndex >= occur+19 && currentIndex > 1) fill(255);
+      else fill(selectedC);
+    }
     text(categories2[i], 0, occur*fSize);
   }
 
   // CAT 3
   textSize(12);
   translate(xDis, yDis);
-  // line(-5, -8, -5, lineL-60);
   for (let i = 0; i < categories3.length; i++) {
     let occur = occurrences3[i];
-    if (currentIndex >= occur+19 && currentIndex > 1) fill(255);
-    else fill(selectedC);
+    if (i == 0) {
+      if (currentIndex > 1) fill(255);
+      else fill(selectedC);
+    }
+    else {
+      if (currentIndex >= occur+19 && currentIndex > 1) fill(255);
+      else fill(selectedC);
+    }
     text(categories3[i], 0, occur*fSize);
   }
   pop();
@@ -232,7 +231,7 @@ function mod(a, b) {
 }
 
 function loadContents() {
-    for (let i = 0; i <divs.length; i++) {
+  for (let i = 0; i <divs.length; i++) {
     let ind = currentIndex - i; //mod(currentIndex - i, 100);
 
     if (ind >= 0 && ind < 100) {

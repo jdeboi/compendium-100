@@ -5,7 +5,7 @@ html, body {
   /* width: 4000px;
   height: 4000px; */
   background: black;
-  font-family: sans-serif;
+  font-family: moonFont, sans-serif;
 }
 canvas {
   position: absolute;
@@ -149,4 +149,9 @@ button {
   /* float: right; */
   /* padding-left: 70px; */
   color: white;
+}
+
+@font-face {
+  font-family: moonFont;
+  src: url("fonts/Moon Light.otf");
 }
