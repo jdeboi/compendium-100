@@ -73,7 +73,7 @@ function initDivs() {
   let inc = 10;
   for (let i = 0; i < num; i++) {
     let x = windowWidth/2+i*inc;
-    let y = i*inc;
+    let y = 60+i*inc;
     divs[i] = new Window(x, y, 400, 400, i);
   }
 }
@@ -127,9 +127,10 @@ function updateDivs() {
 
 function preloadImages() {
   for (let i = 0; i < allData.length; i++) {
-    let id = allData[i].img_url;
-    let end = allData[i].isGif?"gif":"jpg";
-    let url = `images/${id}.${end}`;
+    let path = allData[i].img_url;
+    let isGif = allData[i].isGif == 1 ? true: false;
+    let end = isGif?"gif":"jpg";
+    let url = `images/${path}.${end}`;
     let img=new Image();
     img.src=url;
   }
@@ -231,13 +232,19 @@ function mod(a, b) {
 }
 
 function loadContents() {
-  for (let i = divs.length-1; i >= 0; i--) {
+    for (let i = 0; i <divs.length; i++) {
     let ind = currentIndex - i; //mod(currentIndex - i, 100);
 
     if (ind >= 0 && ind < 100) {
+
       let url = +allData[ind].img_url;
-      let isGif = allData[ind].isGif==1 ? true: false;
-      divs[i].setImageContent(ind, isGif);
+      // console.log(i, ind, currentIndex, url, allData[ind]);
+      let isGif = allData[ind].isGif == 1 ? true: false;
+      let title = allData[ind].title;
+      divs[i].setImageContent(ind, url, title, isGif);
+    }
+    else {
+      divs[i].setEmpty();
     }
   }
 }
@@ -254,7 +261,7 @@ function processSheetsData(response) {
     let d = data.getFormattedValue(0, cc);
     if (d) labels[cc] = d;
   }
-  console.log("labels", labels);
+  // console.log("labels", labels);
 
   for (var r = 1; r < rows; r++) {
     var row = {};
@@ -267,6 +274,9 @@ function processSheetsData(response) {
     }
     allData.push(row);
   }
+  // console.log(0, allData[0]);
+  // console.log(1, allData[1]);
+  // console.log(2, allData[2]);
 
   // loadImageNum(0);
   select(".loading").style("display", "none");

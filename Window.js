@@ -33,6 +33,8 @@ class Window {
     this.toolbar.parent(this.div);
     this.toolbar.style("top", "0px");
     this.toolbar.mousePressed(() => this.draggingOn(this.dragging));
+
+
     // this.toolbar.mouseReleased(() => this.draggingDone(this.dragging));
 
     this.content = createDiv();
@@ -60,13 +62,25 @@ class Window {
     this.button3.mouseClicked(() => this.resetWindow(this.div));
 
 
-
+    this.title = createDiv();
+    this.title.class("toolbarTitle");
+    this.title.parent(this.toolbar);
   }
 
-  setImageContent(ind, isGif=false) {
+  setImageContent(ind, img, title, isGif=false) {
     let end = "jpg";
     if (isGif) end = "gif";
-    if (!this.locked) this.content.style("background-image", `url(images/${ind}.${end})`);
+    if (!this.locked) {
+      this.title.html(`${ind+1}. ${title}`);
+      this.content.style("background-image", `url(images/${img}.${end})`);
+    }
+  }
+
+  setEmpty() {
+    if (!this.locked) {
+      this.title.html('');
+      this.content.style("background-image", "none");
+    }
   }
 
   draggingOn(dragging) {
@@ -74,6 +88,8 @@ class Window {
     this.offsetX = this.x - mouseX;
     this.offsetY = this.y - mouseY;
   }
+
+
 
   endDrag() {
     this.dragging.dragging = false;

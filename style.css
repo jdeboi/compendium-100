@@ -29,15 +29,25 @@ canvas {
 
 .toolbar {
   position: relative;
+  display: flex;
+  flex-direction: row;
+
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   border-bottom: 2px solid white;
   background: black;
   height: 25px;
+  flex-wrap: nowrap;
   /* margin-top: -20px; */
   /* position: absolute; */
 }
 
+.buttons {
+  height: 25px;
+  width: 70px;
+  /* background-color: red; */
+  flex-shrink: 0;
+}
 
 .buttons div {
   position: absolute;
@@ -49,7 +59,7 @@ canvas {
 }
 
 .buttons div:hover{
-  /* background-color: #666666; */
+  background-color: rgb(100, 100, 255);
 }
 
 .button1 {
@@ -63,7 +73,7 @@ canvas {
   background-color: white;
 }
 /* .button1:hover{
-  background-color: red;
+background-color: red;
 } */
 
 .button2 {
@@ -76,14 +86,14 @@ canvas {
   background-color: white;
 }
 /* .button2:hover{
-  background-color: yellow;
+background-color: yellow;
 } */
 
 .button3 {
   left: 50px;
 }
 /* .button3:hover{
-  background-color: green;
+background-color: green;
 } */
 
 .content {
@@ -92,6 +102,7 @@ canvas {
   /* background-color: red; */
   background-repeat: no-repeat;
   background-size: cover;
+  color: white;
 }
 
 button {
@@ -123,4 +134,19 @@ button {
   margin-left: auto;
   margin-right: auto;
   width: 540px;
+}
+
+.toolbarTitle {
+  height: 25px;
+  /* background: yellow; */
+  white-space: nowrap;
+  flex-grow: 1;
+
+  /* padding-left: 40px; */
+  overflow:hidden;
+  text-align: center;
+  padding-top: 3px;
+  /* float: right; */
+  /* padding-left: 70px; */
+  color: white;
 }
