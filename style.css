@@ -2,7 +2,10 @@ html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  /* width: 4000px;
+  height: 4000px; */
   background: black;
+  font-family: sans-serif;
 }
 canvas {
   position: absolute;
@@ -14,7 +17,7 @@ canvas {
 
 .card {
   position: absolute;
-  width: 400px;
+  /* width: 400px; */
   /* height: 400px; */
   overflow: hidden;
   background: transparent;
@@ -46,24 +49,57 @@ canvas {
 }
 
 .buttons div:hover{
-  background-color: white;
+  /* background-color: #666666; */
 }
+
 .button1 {
   left: 10px;
 }
+
+.button1.locked {
+  background-color: white;
+}
+.button1.locked:hover {
+  background-color: white;
+}
+/* .button1:hover{
+  background-color: red;
+} */
+
 .button2 {
   left: 30px;
 }
+.button2.minimized {
+  background-color: white;
+}
+.button2.minimized:hover {
+  background-color: white;
+}
+/* .button2:hover{
+  background-color: yellow;
+} */
+
 .button3 {
   left: 50px;
 }
+/* .button3:hover{
+  background-color: green;
+} */
 
 .content {
-  width: 450px;
-  height: 375px;
+  /* width: 450px;
+  height: 375px; */
   /* background-color: red; */
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+button {
+  color: black;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 800;
 }
 
 .loading {

@@ -4,7 +4,10 @@ var imgs = [];
 var divs = [];
 var isLoading = true;
 var isInstagram = true;
+var scrolling = false;
 var scrollPos = 0;
+var divSize = 400;
+
 
 var categories2 = [
   "FORM",
@@ -17,11 +20,11 @@ var categories2 = [
 ];
 var occurrences2 = [
   0,
-  27,
-  38,
-  56,
+  30,
+  41,
+  60,
   83,
-  97
+  96
 ];
 var categories3 = [
   "2D",
@@ -42,20 +45,19 @@ var categories3 = [
 ];
 var occurrences3 = [
   0,
-  9,
-  23,
-  27,
-  34,
-  38,
-  50,
-  56,
-  73,
+  11,
+  25,
+  30,
+  37,
+  41,
+  54,
+  60,
+  71,
   80,
   83,
-  85,
   89,
-  93,
-  97
+  92,
+  96
 ];
 
 function setup() {
@@ -84,9 +86,36 @@ function draw() {
   drawTable();
 }
 
+function keyPressed() {
+  if (key === 'r') {
+    resetDivs();
+  }
+  if (key === 's') {
+    scrolling = true;
+  }
+}
+
+function keyReleased() {
+  if (key === 's') {
+    scrolling = false;
+  }
+}
 function mouseReleased() {
   for (const div of divs) {
     div.endDrag();
+  }
+}
+
+function resetDivs() {
+  divSize = 400;
+  for (const div of divs) {
+    div.resetWindow();
+  }
+}
+
+function setDivSize() {
+  for (const div of divs) {
+    div.setSize(divSize);
   }
 }
 
@@ -95,13 +124,29 @@ function updateDivs() {
     div.update();
   }
 }
+
+function preloadImages() {
+  for (let i = 0; i < allData.length; i++) {
+    let id = allData[i].img_url;
+    let end = allData[i].isGif?"gif":"jpg";
+    let url = `images/${id}.${end}`;
+    let img=new Image();
+    img.src=url;
+  }
+}
+
 function drawTable() {
   push();
   fill(255);
-  let buffer = 30;
+  let topBuffer = 50;
+  let bottomBuffer = 100;
   let selectedC = color(100, 100, 255);
-  let fSize = (windowHeight-buffer*2)/100;
-  translate(buffer, 12+buffer);
+  let lenTable = windowHeight-topBuffer-bottomBuffer;
+  let lineL = lenTable+bottomBuffer/2;
+  let fSize = lenTable/100;
+  let xDis = 140;
+  let yDis = 0;
+  translate(topBuffer, 12+topBuffer);
 
   // col 1
   // textSize(12);
@@ -112,71 +157,73 @@ function drawTable() {
 
   // col 2
   // translate(140, 0);
-  textSize(20);
+  textSize(24);
   text("DIGITAL SPACETIME", 0, -8);
 
   textSize(16);
   stroke(50);
-  line(0, 0, 0, windowHeight-2*buffer);
+  // line(-5, -24, -5, lineL);
 
   // CAT 1
-  translate(30, 20);
-  line(0, 0, 0, windowHeight-2*buffer);
+  translate(0, 50);
+  // line(-5, -14, -5, lineL-20);
   let y = 0;
   fill(255);
+  if (currentIndex > 1) fill(255);
+  else fill(selectedC);
   text("SPACE", 0, 0);
+
   if (currentIndex > 80) fill(255);
   else fill(selectedC);
   text("TIME", 0, 83*fSize);
 
   // CAT 2
   textSize(14);
-  translate(30, 20);
-  line(0, 0, 0, windowHeight-2*buffer);
+  translate(xDis, yDis);
+  // line(-5, -10, -5, lineL-40);
   for (let i = 0; i < categories2.length; i++) {
     let occur = occurrences2[i];
-    if (currentIndex >= occur) fill(255);
+    if (currentIndex >= occur && currentIndex > 1) fill(255);
     else fill(selectedC);
     text(categories2[i], 0, occur*fSize);
   }
 
   // CAT 3
   textSize(12);
-  translate(30, 20);
-  line(0, 0, 0, windowHeight-2*buffer);
+  translate(xDis, yDis);
+  // line(-5, -8, -5, lineL-60);
   for (let i = 0; i < categories3.length; i++) {
     let occur = occurrences3[i];
-    if (currentIndex >= occur) fill(255);
+    if (currentIndex >= occur && currentIndex > 1) fill(255);
     else fill(selectedC);
     text(categories3[i], 0, occur*fSize);
   }
   pop();
 }
 
-// function keyPressed() {
-//   if (keyCode === UP_ARROW) {
-//     currentIndex++;
-//     currentIndex %= 100;
-//     loadImageNum(currentIndex);
-//   }
-//   else if (keyCode === DOWN_ARROW) {
-//     currentIndex--;
-//     if (currentIndex < 0) currentIndex = 100;
-//     loadImageNum(currentIndex);
-//   }
-// }
-
 function mouseWheel(event) {
-  let divisor = 30;
-  // print(event.delta);
-  //move the square according to the vertical scroll amount
-  scrollPos += event.delta;
-  scrollPos = constrain(scrollPos, 0, divisor*100);
-  currentIndex = floor(scrollPos/divisor);
-  currentIndex = constrain(currentIndex, 0, 100);
-  loadContents();
-  //uncomment to block page scrolling
-  //return false;
+  // let scrolling = select("#checkScroll").value();
+
+  if (!scrolling) {
+
+    let divisor = 30;
+    // print(event.delta);
+    //move the square according to the vertical scroll amount
+    scrollPos -= event.delta;
+    scrollPos = constrain(scrollPos, 0, divisor*(100+divs.length));
+    currentIndex = floor(scrollPos/divisor);
+    currentIndex = constrain(currentIndex, 0, 100+divs.length);
+    loadContents();
+    //uncomment to block page scrolling
+  }
+  else {
+
+    divSize -= event.delta/10;
+    divSize = floor(divSize);
+    divSize = constrain(divSize, 100, 500);
+    setDivSize();
+  }
+  return false;
 }
 
 function mod(a, b) {
@@ -184,15 +231,13 @@ function mod(a, b) {
 }
 
 function loadContents() {
-  for (let i = 0; i < divs.length; i++) {
-    let ind = mod(currentIndex - i, divs.length);
-    let url = allData[ind].img_url;
-    // console.log("url", url, ind);
-    if (url) {
-      divs[i].setImageContent(ind);
-    }
-    else {
-      divs[i].setImageContent(0);
+  for (let i = divs.length-1; i >= 0; i--) {
+    let ind = currentIndex - i; //mod(currentIndex - i, 100);
+
+    if (ind >= 0 && ind < 100) {
+      let url = +allData[ind].img_url;
+      let isGif = allData[ind].isGif==1 ? true: false;
+      divs[i].setImageContent(ind, isGif);
     }
   }
 }
@@ -222,9 +267,11 @@ function processSheetsData(response) {
     }
     allData.push(row);
   }
+
   // loadImageNum(0);
   select(".loading").style("display", "none");
-  console.log("cell2", allData[2]);
+
+  preloadImages();
   // renderData(array);
 }
 
