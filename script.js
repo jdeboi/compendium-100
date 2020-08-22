@@ -174,7 +174,7 @@ function drawTable() {
   else fill(selectedC);
   text("SPACE", 0, 0);
 
-  if (currentIndex > 80) fill(255);
+  if (currentIndex > 80+19) fill(255);
   else fill(selectedC);
   text("TIME", 0, 83*fSize);
 
@@ -184,7 +184,7 @@ function drawTable() {
   // line(-5, -10, -5, lineL-40);
   for (let i = 0; i < categories2.length; i++) {
     let occur = occurrences2[i];
-    if (currentIndex >= occur && currentIndex > 1) fill(255);
+    if (currentIndex >= occur+19 && currentIndex > 1) fill(255);
     else fill(selectedC);
     text(categories2[i], 0, occur*fSize);
   }
@@ -195,7 +195,7 @@ function drawTable() {
   // line(-5, -8, -5, lineL-60);
   for (let i = 0; i < categories3.length; i++) {
     let occur = occurrences3[i];
-    if (currentIndex >= occur && currentIndex > 1) fill(255);
+    if (currentIndex >= occur+19 && currentIndex > 1) fill(255);
     else fill(selectedC);
     text(categories3[i], 0, occur*fSize);
   }
